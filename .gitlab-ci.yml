@@ -1,0 +1,40 @@
+stages:
+- install
+- build
+- lint
+
+image: node:19
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+  - node_modules/
+  - .next/cache/
+
+install_dependencies:
+  stage: install
+  script:
+  - echo "Installing dependencies"
+  - npm ci
+
+build_job:
+  stage: build
+  script:
+  - echo "Building the application"
+  - npm run build
+  only:
+  - main
+  - develop
+  - release
+
+lint_job:
+  stage: lint
+  before_script:
+    - npm install
+  script:
+  - echo "Running code quality checks"
+  - npm run format
+  only:
+  - main
+  - develop
+  - merge_requests

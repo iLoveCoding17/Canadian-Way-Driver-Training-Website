@@ -1,0 +1,24 @@
+import mongoose from "mongoose";
+
+const messageSchema = new mongoose.Schema(
+	{
+		subject: {
+			type: String,
+			required: true,
+		},
+		message: {
+			type: String,
+			required: true,
+		},
+		email: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		timestamps: true,
+	},
+);
+
+const messageModel = mongoose.models.message || mongoose.model("message", messageSchema);
+export default messageModel;

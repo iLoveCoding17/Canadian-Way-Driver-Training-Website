@@ -1,0 +1,23 @@
+# Build and package files
+.next/
+node_modules/
+out/
+build/
+dist/
+coverage/
+
+# Package-lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+public/
+
+# Log files
+*.log
+
+# IDE files
+.idea/
+.vscode/
+.DS_Store 

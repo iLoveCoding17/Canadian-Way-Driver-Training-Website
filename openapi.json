@@ -1,0 +1,399 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "API documentation for the Canadian Way Driver Training website.",
+		"version": "1.0.0",
+		"title": "Canadian Way Driver Training API",
+		"contact": {
+			"email": "supportcanadadriverway@gmail.com"
+		}
+	},
+	"host": "localhost:3000",
+	"basePath": "/",
+	"tags": [
+		{
+			"name": "users",
+			"description": "User-related operations"
+		},
+		{
+			"name": "auth",
+			"description": "Authentication and user management"
+		},
+		{
+			"name": "purchases",
+			"description": "Course purchase operations"
+		}
+	],
+	"schemes": ["https", "http"],
+	"paths": {
+		"/api/users": {
+			"get": {
+				"tags": ["users"],
+				"summary": "Retrieve a list of users",
+				"description": "Returns a list of all registered users (admin only)",
+				"operationId": "getUsers",
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "A list of users",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/User"
+							}
+						}
+					},
+					"500": {
+						"description": "Server error"
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"tags": ["auth"],
+				"summary": "Log in a user",
+				"description": "Authenticate user credentials and return an access token.",
+				"operationId": "loginUser",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "credentials",
+						"description": "User login credentials",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/LoginRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful login",
+						"schema": {
+							"$ref": "#/definitions/LoginResponse"
+						}
+					},
+					"401": {
+						"description": "Invalid credentials"
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"tags": ["auth"],
+				"summary": "Register a new user",
+				"description": "Creates a new user account",
+				"operationId": "registerUser",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "user",
+						"description": "User details for registration",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/UserRegistration"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "User successfully registered",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					},
+					"400": {
+						"description": "Invalid input or user already exists"
+					}
+				}
+			}
+		},
+		"/api/auth/forgot-password": {
+			"post": {
+				"tags": ["auth"],
+				"summary": "Request password reset",
+				"description": "Send a password recovery link to the user's email",
+				"operationId": "forgotPassword",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "emailRequest",
+						"description": "User's email address",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"email": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Password reset link sent to email",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"success": {
+									"type": "boolean"
+								},
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid email or user not found"
+					},
+					"500": {
+						"description": "Server error"
+					}
+				}
+			}
+		},
+		"/api/auth/reset-password": {
+			"post": {
+				"tags": ["auth"],
+				"summary": "Reset password",
+				"description": "Reset user password using a valid token",
+				"operationId": "resetPassword",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "resetData",
+						"description": "Password reset information",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PasswordReset"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Password reset successful",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid token or password"
+					},
+					"500": {
+						"description": "Server error"
+					}
+				}
+			}
+		},
+		"/api/PurchaseEmail": {
+			"post": {
+				"tags": ["purchases"],
+				"summary": "Purchase a course",
+				"description": "Process a course purchase and send confirmation emails",
+				"operationId": "purchaseCourse",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "purchaseInfo",
+						"description": "Course purchase information",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PurchaseRequest"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Purchase recorded and emails sent",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"message": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
+		}
+	},
+	"securityDefinitions": {
+		"jwt": {
+			"type": "apiKey",
+			"name": "Authorization",
+			"in": "header"
+		}
+	},
+	"definitions": {
+		"User": {
+			"type": "object",
+			"properties": {
+				"_id": {
+					"type": "string"
+				},
+				"firstName": {
+					"type": "string"
+				},
+				"lastName": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"loginCount": {
+					"type": "integer"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"updatedAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		},
+		"LoginRequest": {
+			"type": "object",
+			"required": ["email", "password"],
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				}
+			}
+		},
+		"LoginResponse": {
+			"type": "object",
+			"properties": {
+				"user": {
+					"$ref": "#/definitions/User"
+				},
+				"token": {
+					"type": "string"
+				}
+			}
+		},
+		"UserRegistration": {
+			"type": "object",
+			"required": ["firstName", "lastName", "email", "password"],
+			"properties": {
+				"firstName": {
+					"type": "string"
+				},
+				"lastName": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"confirmPassword": {
+					"type": "string"
+				}
+			}
+		},
+		"PasswordReset": {
+			"type": "object",
+			"required": ["token", "password"],
+			"properties": {
+				"token": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string",
+					"minLength": 8
+				}
+			}
+		},
+		"PurchaseRequest": {
+			"type": "object",
+			"required": ["firstName", "lastName", "email", "phone", "course"],
+			"properties": {
+				"firstName": {
+					"type": "string"
+				},
+				"lastName": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"course": {
+					"type": "string"
+				}
+			}
+		},
+		"PurchaseEmail": {
+			"type": "object",
+			"properties": {
+				"firstName": {
+					"type": "string"
+				},
+				"lastName": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"course": {
+					"type": "string"
+				},
+				"paymentStatus": {
+					"type": "string",
+					"default": "Completed"
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"updatedAt": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		}
+	},
+	"externalDocs": {
+		"description": "Canadian Way Driver Training Website",
+		"url": "http://localhost:3000"
+	}
+}
