@@ -10,13 +10,13 @@ This image shows an earlier version of the website. The current live site has si
 
 
 # My Contribution
-**User feedback form**: Sends the submitted feedback to the admin's email when a user clicks submit 
+- **User feedback form**: Sends the submitted feedback to the admin's email when a user clicks submit 
 
-**Account deletion**: Removes the user's account information from the MongoDB database when they delete their account 
+- **Account deletion**: Removes the user's account information from the MongoDB database when they delete their account 
 
-**Inactivity sign-out**: Signs users out automatically after a period of inactivity 
+- **Inactivity sign-out**: Signs users out automatically after a period of inactivity 
 
-**UI improvements**: Improved the layout and styling of the About Us page and the admin page 
+- **UI improvements**: Improved the layout and styling of the About Us page and the admin page 
 
 
 ## Setup
@@ -41,4 +41,3 @@ This image shows an earlier version of the website. The current live site has si
 - [Bootstrap Docs](https://getbootstrap.com/docs/5.3) - To look up Bootstrap components/syntax
 - [Real Favicon Generator](https://realfavicongenerator.net/) - To generate favicon package
 - [Google Fonts](https://fonts.google.com/) - To find and use fonts
-- Other online tutorials
